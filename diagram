@@ -1,1 +1,47 @@
-
+platform-project/
+├── modules/
+│   ├── vpc/
+│   │   ├── main.tf          ← creates VPC, subnets, IGW, NAT
+│   │   ├── variables.tf     
+│   │   └── outputs.tf       
+│   ├── security/
+│   │   ├── main.tf          ← security groups
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── alb/
+│   │   ├── main.tf          ← ALB, target group, HTTP+HTTPS listeners
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── acm/                 ← HTTPS certificate
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── ecs/
+│   │   ├── main.tf          ← cluster, task definition, service
+│   │   ├── variables.tf
+│   │   └── outputs.tf
+│   ├── iam/                 ← execution + task roles
+│   │   ├── main.tf
+│   │   └── outputs.tf
+│   ├── autoscaling/         ← scale out/in policies
+│   │   ├── main.tf
+│   │   └── variables.tf
+│   └── monitoring/          ← Prometheus + Grafana on ECS
+│       ├── main.tf
+│       └── variables.tf
+├── environments/
+│   ├── dev/
+│   │   ├── backend.tf
+│   │   ├── main.tf          ← wires all modules together
+│   │   ├── variables.tf
+│   │   └── terraform.tfvars
+│   ├── staging/             ← same structure, different tfvars
+│   └── prod/                ← same structure, different tfvars
+├── app/
+│   ├── app.py               ← sample Flask app 
+│   ├── requirements.txt
+│   └── Dockerfile
+└── .github/
+    └── workflows/
+        ├── terraform-plan.yml    ← runs on every PR
+        └── terraform-apply.yml   ← runs on merge to main
