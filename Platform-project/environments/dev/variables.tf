@@ -1,0 +1,9 @@
+variable "region"        { default = "eu-west-2" }
+variable "env"           { default = "dev" }
+variable "image"         { description = "ECR image URL" }
+variable "domain_name"   { default = "" }
+variable "task_cpu"      { default = "256" }
+variable "task_memory"   { default = "512" }
+variable "desired_count" { default = 1 }
+variable "min_tasks"     { default = 1 }
+variable "max_tasks"     { default = 4 }
