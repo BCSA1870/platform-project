@@ -1,0 +1,11 @@
+variable "image"              { type = string }
+variable "private_subnet_a"  { type = string }
+variable "ecs_sg"            { type = string }
+variable "target_group_arn"  { type = string }
+variable "execution_role_arn"{ type = string }
+variable "task_role_arn"     { type = string }
+variable "alb_listener_arn"  { type = string }
+variable "task_cpu"          { default = "256" }
+variable "task_memory"       { default = "512" }
+variable "desired_count"     { default = 1 }
+variable "env"               { default = "dev" }
