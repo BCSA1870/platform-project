@@ -6,3 +6,7 @@
 *.pem
 *.key
 venv/
+# Ignore accidental parent directory mapping
+../*
+../.*
+.vscode
