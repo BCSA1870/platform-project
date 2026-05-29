@@ -55,3 +55,6 @@ jobs:
 
       - name: Get ALB URL
         run: terraform output alb_dns
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
