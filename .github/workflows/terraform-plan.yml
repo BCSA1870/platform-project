@@ -7,6 +7,9 @@ on:
       - 'environments/**'
       - 'modules/**'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 permissions:
   contents: read
   pull-requests: write
@@ -74,6 +77,3 @@ jobs:
               repo: context.repo.repo,
               body: '## Terraform Plan\n\n```\n' + truncated + '\n```'
             });
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

@@ -3,12 +3,12 @@ resource "aws_cloudwatch_log_group" "prometheus" {
   name              = "/ecs/bcsap1-prometheus-${var.env}"
   retention_in_days = 7
 }
- 
+
 resource "aws_cloudwatch_log_group" "grafana" {
   name              = "/ecs/bcsap1-grafana-${var.env}"
   retention_in_days = 7
 }
- 
+
 # ── Prometheus ────────────────────────────────────────────────────────────
 resource "aws_ecs_task_definition" "prometheus" {
   family                   = "bcsap1-prometheus-${var.env}"
@@ -18,19 +18,19 @@ resource "aws_ecs_task_definition" "prometheus" {
   memory                   = "512"
   execution_role_arn       = var.execution_role_arn
   task_role_arn            = var.task_role_arn
- 
+
   container_definitions = jsonencode([{
     name  = "prometheus"
-    image = "prom/prometheus:v2.48.0"   # pin versions in production
- 
+    image = "prom/prometheus:v2.48.0" # pin versions in production
+
     portMappings = [{ containerPort = 9090, protocol = "tcp" }]
- 
+
     command = [
       "--config.file=/etc/prometheus/prometheus.yml",
       "--storage.tsdb.retention.time=7d",
-      "--web.enable-lifecycle"   # allows config reload without restart
+      "--web.enable-lifecycle" # allows config reload without restart
     ]
- 
+
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -41,21 +41,21 @@ resource "aws_ecs_task_definition" "prometheus" {
     }
   }])
 }
- 
+
 resource "aws_ecs_service" "prometheus" {
   name            = "bcsap1-prometheus-${var.env}"
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.prometheus.arn
   desired_count   = 1
   launch_type     = "FARGATE"
- 
+
   network_configuration {
     subnets          = [var.private_subnet_a]
     security_groups  = [var.ecs_sg]
     assign_public_ip = false
   }
 }
- 
+
 # ── Grafana ───────────────────────────────────────────────────────────────
 resource "aws_ecs_task_definition" "grafana" {
   family                   = "bcsap1-grafana-${var.env}"
@@ -65,19 +65,19 @@ resource "aws_ecs_task_definition" "grafana" {
   memory                   = "512"
   execution_role_arn       = var.execution_role_arn
   task_role_arn            = var.task_role_arn
- 
+
   container_definitions = jsonencode([{
     name  = "grafana"
     image = "grafana/grafana:10.2.0"
- 
+
     portMappings = [{ containerPort = 3000, protocol = "tcp" }]
- 
+
     environment = [
       { name = "GF_SECURITY_ADMIN_PASSWORD", value = "change-me-in-prod-use-secrets-manager!" },
-      { name = "GF_USERS_ALLOW_SIGN_UP",     value = "false" },
-      { name = "GF_SERVER_ROOT_URL",          value = "https://${var.domain}/grafana" }
+      { name = "GF_USERS_ALLOW_SIGN_UP", value = "false" },
+      { name = "GF_SERVER_ROOT_URL", value = "https://${var.domain}/grafana" }
     ]
- 
+
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -88,25 +88,25 @@ resource "aws_ecs_task_definition" "grafana" {
     }
   }])
 }
- 
+
 resource "aws_ecs_service" "grafana" {
   name            = "bcsap1-grafana-${var.env}"
   cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.grafana.arn
   desired_count   = 1
   launch_type     = "FARGATE"
- 
+
   network_configuration {
     subnets          = [var.private_subnet_a]
     security_groups  = [var.monitoring_sg]
     assign_public_ip = false
   }
 }
- 
+
 # ── CloudWatch Dashboard ──────────────────────────────────────────────────
 resource "aws_cloudwatch_dashboard" "main" {
   dashboard_name = "BCSAP1-${var.env}"
- 
+
   dashboard_body = jsonencode({
     widgets = [
       {

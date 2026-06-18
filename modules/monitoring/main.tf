@@ -71,8 +71,8 @@ resource "aws_ecs_task_definition" "grafana" {
 
     environment = [
       { name = "GF_SECURITY_ADMIN_PASSWORD", value = "BcsapAdmin2024!" },
-      { name = "GF_USERS_ALLOW_SIGN_UP",     value = "false" },
-      { name = "GF_SERVER_HTTP_PORT",         value = "3000" }
+      { name = "GF_USERS_ALLOW_SIGN_UP", value = "false" },
+      { name = "GF_SERVER_HTTP_PORT", value = "3000" }
     ]
 
     logConfiguration = {
@@ -112,16 +112,16 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title   = "ECS CPU Utilisation"
-          region  = "eu-west-2"
-          view    = "timeSeries"
-          stacked = false
-          stat    = "Average"
-          period  = 60
+          title       = "ECS CPU Utilisation"
+          region      = "eu-west-2"
+          view        = "timeSeries"
+          stacked     = false
+          stat        = "Average"
+          period      = 60
           annotations = { horizontal = [] }
           metrics = [
             ["AWS/ECS", "CPUUtilization",
-              "ClusterName", "bcsap1-cluster-${var.env}"]
+            "ClusterName", "bcsap1-cluster-${var.env}"]
           ]
           yAxis = { left = { min = 0, max = 100 } }
         }
@@ -133,16 +133,16 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title   = "ECS Memory Utilisation"
-          region  = "eu-west-2"
-          view    = "timeSeries"
-          stacked = false
-          stat    = "Average"
-          period  = 60
+          title       = "ECS Memory Utilisation"
+          region      = "eu-west-2"
+          view        = "timeSeries"
+          stacked     = false
+          stat        = "Average"
+          period      = 60
           annotations = { horizontal = [] }
           metrics = [
             ["AWS/ECS", "MemoryUtilization",
-              "ClusterName", "bcsap1-cluster-${var.env}"]
+            "ClusterName", "bcsap1-cluster-${var.env}"]
           ]
           yAxis = { left = { min = 0, max = 100 } }
         }
@@ -154,16 +154,16 @@ resource "aws_cloudwatch_dashboard" "main" {
         width  = 12
         height = 6
         properties = {
-          title   = "ALB Request Count"
-          region  = "eu-west-2"
-          view    = "timeSeries"
-          stacked = false
-          stat    = "Sum"
-          period  = 60
+          title       = "ALB Request Count"
+          region      = "eu-west-2"
+          view        = "timeSeries"
+          stacked     = false
+          stat        = "Sum"
+          period      = 60
           annotations = { horizontal = [] }
           metrics = [
             ["AWS/ApplicationELB", "RequestCount",
-              "LoadBalancer", "app/bcsap1-alb-${var.env}"]
+            "LoadBalancer", "app/bcsap1-alb-${var.env}"]
           ]
         }
       },
@@ -187,7 +187,7 @@ resource "aws_cloudwatch_dashboard" "main" {
           }
           metrics = [
             ["AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count",
-              "LoadBalancer", "app/bcsap1-alb-${var.env}"]
+            "LoadBalancer", "app/bcsap1-alb-${var.env}"]
           ]
         }
       }

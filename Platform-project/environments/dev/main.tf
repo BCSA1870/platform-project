@@ -1,6 +1,6 @@
 provider "aws" {
   region = var.region
- 
+
   default_tags {
     tags = {
       Project     = "BCSAP1"
@@ -10,44 +10,44 @@ provider "aws" {
     }
   }
 }
- 
+
 # ── 1. Network Foundation ──────────────────────────────────────────────────
 module "vpc" {
   source = "../../modules/vpc"
   env    = var.env
   region = var.region
 }
- 
+
 # ── 2. Security Groups ─────────────────────────────────────────────────────
 module "security" {
   source = "../../modules/security"
   vpc_id = module.vpc.vpc_id
   env    = var.env
 }
- 
+
 # ── 3. IAM Roles ───────────────────────────────────────────────────────────
 module "iam" {
   source = "../../modules/iam"
   env    = var.env
 }
- 
+
 # ── 4. HTTPS Certificate (skip if no domain yet) ───────────────────────────
 # module "acm" {
 #   source      = "../../modules/acm"
 #   domain_name = var.domain_name
 # }
- 
+
 # ── 5. Load Balancer ───────────────────────────────────────────────────────
 module "alb" {
-  source           = "../../modules/alb"
-  vpc_id           = module.vpc.vpc_id
-  public_subnet_a  = module.vpc.public_subnet_a
-  public_subnet_b  = module.vpc.public_subnet_b
-  alb_sg           = module.security.alb_sg
+  source          = "../../modules/alb"
+  vpc_id          = module.vpc.vpc_id
+  public_subnet_a = module.vpc.public_subnet_a
+  public_subnet_b = module.vpc.public_subnet_b
+  alb_sg          = module.security.alb_sg
   # certificate_arn = module.acm.certificate_arn   # uncomment when ACM ready
-  env              = var.env
+  env = var.env
 }
- 
+
 # ── 6. ECS Cluster + App Service ───────────────────────────────────────────
 module "ecs" {
   source             = "../../modules/ecs"
@@ -63,7 +63,7 @@ module "ecs" {
   desired_count      = var.desired_count
   env                = var.env
 }
- 
+
 # ── 7. Autoscaling ─────────────────────────────────────────────────────────
 module "autoscaling" {
   source       = "../../modules/autoscaling"
@@ -73,7 +73,7 @@ module "autoscaling" {
   max_tasks    = var.max_tasks
   env          = var.env
 }
- 
+
 # ── 8. Monitoring Stack ────────────────────────────────────────────────────
 module "monitoring" {
   source             = "../../modules/monitoring"
@@ -85,7 +85,7 @@ module "monitoring" {
   task_role_arn      = module.iam.task_role_arn
   env                = var.env
 }
- 
+
 # ── Outputs ────────────────────────────────────────────────────────────────
 output "alb_dns" {
   value       = module.alb.alb_dns

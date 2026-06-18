@@ -2,7 +2,7 @@
 # AWS uses this to start your container. Needs ECR pull + CloudWatch log write.
 resource "aws_iam_role" "execution" {
   name = "bcsap1-ecs-execution-${var.env}"
- 
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -11,21 +11,21 @@ resource "aws_iam_role" "execution" {
       Action    = "sts:AssumeRole"
     }]
   })
- 
+
   tags = { Name = "BCSAP1-ECS-Execution", Environment = var.env }
 }
- 
+
 # AWS-managed policy covering ECR pull + CloudWatch log creation
 resource "aws_iam_role_policy_attachment" "execution_managed" {
   role       = aws_iam_role.execution.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
- 
+
 # ── Task Role ─────────────────────────────────────────────────────────────
 # Your application code runs as this role. Only grant what the app actually needs.
 resource "aws_iam_role" "task" {
   name = "bcsap1-ecs-task-${var.env}"
- 
+
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
@@ -34,14 +34,14 @@ resource "aws_iam_role" "task" {
       Action    = "sts:AssumeRole"
     }]
   })
- 
+
   tags = { Name = "BCSAP1-ECS-Task", Environment = var.env }
 }
- 
+
 resource "aws_iam_role_policy" "task_logs" {
   name = "bcsap1-task-logs-${var.env}"
   role = aws_iam_role.task.id
- 
+
   # Principle of Least Privilege: only exactly what the app needs
   policy = jsonencode({
     Version = "2012-10-17"
@@ -61,5 +61,5 @@ resource "aws_iam_role_policy" "task_logs" {
     ]
   })
 }
- 
+
 variable "env" { default = "dev" }
