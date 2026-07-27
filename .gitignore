@@ -1,4 +1,34 @@
 .terraform/
+**/.terraform/
 *.tfstate
 *.tfstate.backup
+.DS_Store
+*.tfvars
 .terraform.lock.hcl
+*.pem
+*.key
+venv/
+# Ignore accidental parent directory mapping
+../*
+../.* 
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# MacOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
